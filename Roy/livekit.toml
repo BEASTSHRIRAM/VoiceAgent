@@ -1,0 +1,6 @@
+[project]
+  subdomain = "vriddhi-207ozxao"
+
+[agent]
+  id = "CA_moPBzLXbWaAy"
+  auto_subscribe = true
