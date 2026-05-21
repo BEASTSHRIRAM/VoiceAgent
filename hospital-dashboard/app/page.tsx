@@ -6,8 +6,8 @@ import Link from "next/link";
 import { Activity, AlertCircle, Mic, Users } from "lucide-react";
 
 export default function Home() {
-  const patients = useQuery(api.patients.getAllPatients);
-  const activeAlerts = useQuery(api.patients.getActiveAlerts);
+  const patients = useQuery(api.patients.getAllPatients, {});
+  const activeAlerts = useQuery(api.patients.getActiveAlerts, {});
 
   const stableCount = patients?.filter((p) => p.vitals?.oxygenSaturation >= 95).length || 0;
   const criticalCount = patients?.filter((p) => p.vitals?.oxygenSaturation < 90).length || 0;
