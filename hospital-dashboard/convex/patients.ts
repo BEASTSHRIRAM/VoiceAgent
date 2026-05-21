@@ -3,7 +3,6 @@ import { mutation, query } from "./_generated/server";
 
 export const getPatientByBed = query({
   args: { bedNumber: v.string() },
-  visibility: "public",
   handler: async (ctx, args) => {
     const patient = await ctx.db
       .query("patients")
@@ -30,7 +29,6 @@ export const getPatientByBed = query({
 });
 
 export const getAllPatients = query({
-  visibility: "public",
   handler: async (ctx) => {
     const patients = await ctx.db.query("patients").collect();
 
@@ -103,7 +101,6 @@ export const createEmergencyAlert = mutation({
 });
 
 export const getActiveAlerts = query({
-  visibility: "public",
   handler: async (ctx) => {
     return await ctx.db
       .query("emergencyAlerts")

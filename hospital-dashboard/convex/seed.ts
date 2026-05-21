@@ -1,7 +1,6 @@
 import { mutation } from "./_generated/server";
 
 export const seedData = mutation({
-  visibility: "public",
   handler: async (ctx) => {
     // Clear existing data - delete all records
     const allPatients = await ctx.db.query("patients").collect();

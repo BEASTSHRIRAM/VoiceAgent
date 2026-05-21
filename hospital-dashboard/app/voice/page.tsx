@@ -11,9 +11,8 @@ import {
   VoiceAssistantControlBar,
   useParticipants,
 } from "@livekit/components-react";
-import { ConnectionState, Participant } from "livekit-client";
+import { ConnectionState } from "livekit-client";
 import "@livekit/components-styles";
-import Link from "next/link";
 
 function AgentControls({ onDisconnect }: { onDisconnect: () => void }) {
   const { state, audioTrack } = useVoiceAssistant();
@@ -21,15 +20,11 @@ function AgentControls({ onDisconnect }: { onDisconnect: () => void }) {
   const connectionState = useConnectionState();
   const participants = useParticipants();
 
-  // Debug: Log all participants and their tracks
+  // Debug: Log all participants
   useEffect(() => {
     console.log("All participants:", participants);
     participants.forEach((p) => {
-      console.log(`Participant: ${p.name} (${p.identity})`, {
-        audioTracks: p.audioTracks,
-        videoTracks: p.videoTracks,
-        isAgent: p.isAgent,
-      });
+      console.log(`Participant: ${p.name} (${p.identity})`);
     });
   }, [participants]);
 
@@ -86,7 +81,7 @@ function AgentControls({ onDisconnect }: { onDisconnect: () => void }) {
           <BarVisualizer
             state={state}
             barCount={15}
-            trackRef={audioTrack}
+            track={audioTrack}
             className="w-full h-full"
           />
         </div>

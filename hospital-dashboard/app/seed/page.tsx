@@ -12,7 +12,7 @@ export default function SeedPage() {
   const handleSeed = async () => {
     setLoading(true);
     try {
-      const res = await seedData();
+      const res = await seedData({});
       setResult(res);
     } catch (error) {
       setResult({ error: String(error) });

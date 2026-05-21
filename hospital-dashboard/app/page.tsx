@@ -5,12 +5,37 @@ import { api } from "@/convex/_generated/api";
 import Link from "next/link";
 import { Activity, AlertCircle, Mic, Users } from "lucide-react";
 
+type Patient = {
+  _id: string;
+  patientId: string;
+  name: string;
+  age: number;
+  gender?: string;
+  bedNumber: string;
+  ward: string;
+  admissionDate: string;
+  diagnosis: string;
+  allergies: string[];
+  attendingPhysician?: string;
+  nurseAssigned?: string;
+  vitals?: {
+    temperature: number;
+    bpSystolic: number;
+    bpDiastolic: number;
+    oxygenSaturation: number;
+    heartRate: number;
+    respiratoryRate?: number;
+    recordedAt: string;
+    recordedBy?: string;
+  };
+};
+
 export default function Home() {
-  const patients = useQuery(api.patients.getAllPatients, {});
+  const patients = useQuery(api.patients.getAllPatients, {}) as Patient[] | undefined;
   const activeAlerts = useQuery(api.patients.getActiveAlerts, {});
 
-  const stableCount = patients?.filter((p) => p.vitals?.oxygenSaturation >= 95).length || 0;
-  const criticalCount = patients?.filter((p) => p.vitals?.oxygenSaturation < 90).length || 0;
+  const stableCount = patients?.filter((p: Patient) => (p.vitals?.oxygenSaturation ?? 0) >= 95).length || 0;
+  const criticalCount = patients?.filter((p: Patient) => (p.vitals?.oxygenSaturation ?? 0) < 90).length || 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
