@@ -3,8 +3,8 @@ import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 
 export const metadata: Metadata = {
-  title: "Hospital Ward Dashboard",
-  description: "Voice-enabled hospital patient management system",
+  title: "Hospital Ward Assistant - Voice-Enabled Patient Care",
+  description: "Real-time patient monitoring and voice-controlled hospital management system",
 };
 
 export default function RootLayout({
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body className="antialiased bg-white text-gray-900">
         <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>
     </html>

@@ -13,6 +13,8 @@ import {
 } from "@livekit/components-react";
 import { ConnectionState } from "livekit-client";
 import "@livekit/components-styles";
+import Link from "next/link";
+import { Mic } from "lucide-react";
 
 function AgentControls({ onDisconnect }: { onDisconnect: () => void }) {
   const { state, audioTrack } = useVoiceAssistant();
@@ -35,13 +37,13 @@ function AgentControls({ onDisconnect }: { onDisconnect: () => void }) {
   const getStateLabel = () => {
     switch (state) {
       case "connecting":
-        return "Connecting to agent...";
+        return "Connecting to agent";
       case "initializing":
-        return "Initializing...";
+        return "Initializing";
       case "listening":
         return "Listening";
       case "thinking":
-        return "Thinking...";
+        return "Processing";
       case "speaking":
         return "Speaking";
       default:
@@ -66,10 +68,10 @@ function AgentControls({ onDisconnect }: { onDisconnect: () => void }) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 w-full max-w-md">
+    <div className="flex flex-col items-center gap-8 w-full max-w-md">
       {/* Status Indicator */}
       <div className="flex items-center gap-3">
-        <div className={`w-4 h-4 rounded-full animate-pulse ${getStateColor()}`} />
+        <div className={`w-3 h-3 rounded-full animate-pulse ${getStateColor()}`} />
         <span className="text-lg font-medium text-gray-700">
           {getStateLabel()}
         </span>
@@ -77,7 +79,7 @@ function AgentControls({ onDisconnect }: { onDisconnect: () => void }) {
 
       {/* Audio Visualizer */}
       {audioTrack && connectionState === ConnectionState.Connected && (
-        <div className="w-full h-32 flex items-center justify-center bg-gray-100 rounded-xl p-4 border border-gray-200">
+        <div className="w-full h-32 flex items-center justify-center bg-gray-100 rounded-lg p-4 border border-gray-200">
           <BarVisualizer
             state={state}
             barCount={15}
@@ -89,9 +91,9 @@ function AgentControls({ onDisconnect }: { onDisconnect: () => void }) {
 
       {/* Room Info */}
       {roomInfo.name && (
-        <div className="text-sm text-gray-600">
-          <p>Room: {roomInfo.name}</p>
-          <p>Participants: {participants.length}</p>
+        <div className="text-sm text-gray-600 text-center">
+          <p className="font-medium">{roomInfo.name}</p>
+          <p className="text-xs text-gray-500">{participants.length} participant(s)</p>
         </div>
       )}
 
@@ -101,16 +103,16 @@ function AgentControls({ onDisconnect }: { onDisconnect: () => void }) {
       {/* Instructions */}
       <div className="text-center text-sm text-gray-600 max-w-sm">
         {connectionState === ConnectionState.Connected ? (
-          <p>Start speaking to interact with your AI voice assistant.</p>
+          <p>Start speaking to interact with the voice assistant.</p>
         ) : (
-          <p>Connecting to your voice assistant...</p>
+          <p>Connecting to voice assistant</p>
         )}
       </div>
 
       {/* Disconnect Button */}
       <button
         onClick={onDisconnect}
-        className="mt-4 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition"
+        className="mt-4 px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium rounded-full transition"
       >
         End Conversation
       </button>
@@ -178,36 +180,51 @@ export default function VoicePage() {
 
   if (!serverUrl) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 bg-red-100 rounded-xl border border-red-300">
-        <p className="text-red-700 text-center">
-          Missing NEXT_PUBLIC_LIVEKIT_URL environment variable.
-          <br />
-          Please add it to your .env file.
-        </p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white p-8">
+        <div className="max-w-md text-center">
+          <p className="text-red-600 font-medium mb-2">Configuration Error</p>
+          <p className="text-gray-600">
+            Missing NEXT_PUBLIC_LIVEKIT_URL environment variable. Please add it to your .env file.
+          </p>
+        </div>
       </div>
     );
   }
 
   if (!isConnected) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full text-center">
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">
-            🏥 Hospital Voice Assistant
-          </h2>
-          <p className="text-center text-gray-600 max-w-md mb-8 mx-auto">
-            Connect to your AI-powered voice assistant. Click the button below
-            to start a conversation.
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+        <nav className="fixed top-0 w-full bg-black text-white z-50 h-11 flex items-center px-8 border-b border-gray-800">
+          <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
+            <Link href="/" className="text-sm font-medium hover:text-gray-300">
+              Hospital Ward Assistant
+            </Link>
+            <Link
+              href="/dashboard"
+              className="text-sm px-4 py-2 border border-gray-600 hover:border-gray-400 rounded-full transition"
+            >
+              Dashboard
+            </Link>
+          </div>
+        </nav>
+
+        <div className="pt-16 px-8 max-w-2xl w-full text-center">
+          <h1 className="text-5xl font-semibold mb-6 leading-tight">
+            Voice Assistant
+          </h1>
+          <p className="text-xl text-gray-600 mb-12 leading-relaxed">
+            Connect to your AI-powered voice assistant. Click below to start a conversation about patient care.
           </p>
           <button
             onClick={connectToAgent}
             disabled={isConnecting}
-            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
           >
+            <Mic size={20} />
             {isConnecting ? "Connecting..." : "Start Conversation"}
           </button>
           {error && (
-            <div className="text-red-600 text-sm max-w-md text-center mt-4">
+            <div className="text-red-600 text-sm max-w-md text-center mt-6">
               {error}
             </div>
           )}
@@ -216,14 +233,18 @@ export default function VoicePage() {
     );
   }
 
-  // Show initializing state when connected but not ready to render
   if (isConnected && !canRender) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
-        <div className="flex items-center gap-3">
-          <div className="w-4 h-4 rounded-full animate-pulse bg-gray-400" />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+        <nav className="fixed top-0 w-full bg-black text-white z-50 h-11 flex items-center px-8 border-b border-gray-800">
+          <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
+            <div className="text-sm font-medium">Hospital Ward Assistant</div>
+          </div>
+        </nav>
+        <div className="pt-16 flex items-center gap-3">
+          <div className="w-3 h-3 rounded-full animate-pulse bg-gray-400" />
           <span className="text-lg font-medium text-gray-700">
-            Initializing microphone...
+            Initializing microphone
           </span>
         </div>
       </div>
@@ -231,7 +252,21 @@ export default function VoicePage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+      <nav className="fixed top-0 w-full bg-black text-white z-50 h-11 flex items-center px-8 border-b border-gray-800">
+        <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
+          <Link href="/" className="text-sm font-medium hover:text-gray-300">
+            Hospital Ward Assistant
+          </Link>
+          <Link
+            href="/dashboard"
+            className="text-sm px-4 py-2 border border-gray-600 hover:border-gray-400 rounded-full transition"
+          >
+            Dashboard
+          </Link>
+        </div>
+      </nav>
+
       {token && canRender && (
         <LiveKitRoom
           key={token}
@@ -247,7 +282,7 @@ export default function VoicePage() {
           onDisconnected={disconnect}
           onConnected={() => console.log("Connected to room")}
           onError={(error) => console.error("LiveKit error:", error)}
-          className="flex flex-col items-center gap-6 w-full"
+          className="flex flex-col items-center justify-center w-full h-screen pt-16"
         >
           <AgentControls onDisconnect={disconnect} />
           <RoomAudioRenderer />
